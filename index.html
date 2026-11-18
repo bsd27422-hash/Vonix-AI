@@ -6,7 +6,7 @@
     <title>Vonix AI</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
@@ -35,6 +35,93 @@
 </head>
 <body class="bg-black text-[#e3e3e3] h-screen w-screen flex overflow-hidden selection:bg-white/20 selection:text-white">
 
+    <!-- Account Login / Register Modal -->
+    <div id="authModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#111114] border border-[#24242a] rounded-3xl max-w-sm w-full p-6 space-y-4 relative vonix-glow">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full hover:bg-[#1e1f24] text-[#9ca3af] hover:text-white flex items-center justify-center cursor-pointer">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+
+            <div class="text-center space-y-1.5">
+                <div class="w-11 h-11 bg-white/5 rounded-full flex items-center justify-center mx-auto border border-white/10">
+                    <i class="fa-solid fa-user-shield text-white text-sm"></i>
+                </div>
+                <h3 id="authTitle" class="text-lg font-semibold text-white">Sign in to Vonix</h3>
+                <p id="authSubtitle" class="text-xs text-[#9ca3af]">Sign in or create an account to save your chats and Vonix Pro subscription.</p>
+            </div>
+
+            <div id="authAlert" class="hidden text-xs px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-center"></div>
+
+            <!-- Tabs -->
+            <div class="grid grid-cols-2 bg-[#0a0a0c] p-1 rounded-xl border border-[#1f1f24]">
+                <button type="button" id="tabLogin" onclick="switchAuthTab('login')" class="py-1.5 text-xs font-medium rounded-lg bg-[#1d1d22] text-white transition cursor-pointer">Sign In</button>
+                <button type="button" id="tabRegister" onclick="switchAuthTab('register')" class="py-1.5 text-xs font-medium rounded-lg text-[#8e9196] hover:text-white transition cursor-pointer">Create Account</button>
+            </div>
+
+            <form id="authForm" onsubmit="handleAuthSubmit(event)" class="space-y-3">
+                <div id="nameFieldWrapper" class="hidden">
+                    <label class="block text-[11px] text-[#9ca3af] mb-1">Full Name</label>
+                    <input type="text" id="authName" placeholder="Your name" class="w-full bg-[#0a0a0c] border border-[#24242a] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-white/40">
+                </div>
+                <div>
+                    <label class="block text-[11px] text-[#9ca3af] mb-1">Email</label>
+                    <input type="email" id="authEmail" required placeholder="you@example.com" class="w-full bg-[#0a0a0c] border border-[#24242a] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-white/40">
+                </div>
+                <div>
+                    <label class="block text-[11px] text-[#9ca3af] mb-1">Password</label>
+                    <input type="password" id="authPassword" required placeholder="••••••••" class="w-full bg-[#0a0a0c] border border-[#24242a] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-white/40">
+                </div>
+                <button type="submit" id="authSubmitBtn" class="w-full bg-white hover:bg-[#e2e2e6] text-black text-xs font-semibold py-2.5 rounded-xl transition cursor-pointer mt-2">
+                    Sign In
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Vonix Pro Modal ($10 / 15 SAR - 1 Month Exact) -->
+    <div id="proModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#111114] border border-[#2a2a34] rounded-3xl max-w-md w-full p-6 space-y-5 relative vonix-glow">
+            <button onclick="closeProModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full hover:bg-[#1e1f24] text-[#9ca3af] hover:text-white flex items-center justify-center cursor-pointer">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+
+            <div class="text-center space-y-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-medium text-white">
+                    <i class="fa-solid fa-sparkles text-[#a8c7fa]"></i> VONIX PRO
+                </span>
+                <h3 class="text-xl font-semibold text-white">Upgrade to Vonix Pro</h3>
+                <div class="flex items-baseline justify-center gap-2 pt-1">
+                    <span class="text-3xl font-bold text-white">$10</span>
+                    <span class="text-sm text-[#9ca3af]">/</span>
+                    <span class="text-2xl font-bold text-[#a8c7fa]">15 ريال</span>
+                    <span class="text-xs text-[#787880]">/ month (30 days)</span>
+                </div>
+                <p id="proAccountLabel" class="text-[11px] text-[#8e9196]"></p>
+            </div>
+
+            <div class="bg-[#0a0a0c] border border-[#1f1f24] rounded-2xl p-4 space-y-2.5 text-xs text-[#d1d1d6]">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-check text-[#a8c7fa]"></i>
+                    <span>Access to Vonix 2.6 Pro Reasoning & Deep Code Mode</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-check text-[#a8c7fa]"></i>
+                    <span>Unlimited messages, priority speed & saved cloud history</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-clock text-[#a8c7fa]"></i>
+                    <span>Valid for exactly 1 month (30 days) on your account</span>
+                </div>
+            </div>
+
+            <div id="proStatusBox" class="hidden text-center p-3 rounded-2xl bg-[#16181f] border border-[#a8c7fa]/30 text-xs text-[#a8c7fa]"></div>
+
+            <button id="subscribeProBtn" onclick="activateProSubscription()" class="w-full bg-white hover:bg-[#e2e2e6] text-black text-xs font-semibold py-3 rounded-xl transition cursor-pointer">
+                Subscribe Now — $10 / 15 ريال
+            </button>
+        </div>
+    </div>
+
     <!-- Collapsible Left Sidebar -->
     <aside id="sidebar" class="w-64 bg-[#0b0b0d] border-r border-[#1a1a1e] flex flex-col transition-all duration-300 z-30 shrink-0 h-full">
         <!-- Top Sidebar Controls -->
@@ -42,22 +129,9 @@
             <button onclick="toggleSidebar()" class="w-10 h-10 rounded-full hover:bg-[#1a1a1e] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors cursor-pointer" title="Collapse menu">
                 <i class="fa-solid fa-bars text-sm"></i>
             </button>
+            <span id="sidebarPlanTag" class="text-[10px] px-2.5 py-0.5 rounded-full bg-[#151518] border border-[#242429] text-[#8e9196]">Free Plan</span>
         </div>
 
         <!-- New Chat Pill Button -->
         <div class="px-3 mb-4">
-            <button onclick="createNewChat()" class="w-full inline-flex items-center justify-center gap-3 bg-[#151518] hover:bg-[#1f1f24] border border-[#242429] text-sm font-medium text-[#e3e3e3] py-2.5 px-4 rounded-full transition-all cursor-pointer">
-                <i class="fa-solid fa-plus text-xs text-[#9ca3af]"></i>
-                <span>New chat</span>
-            </button>
-        </div>
-
-        <!-- Recent Chats List -->
-        <div class="px-4 mb-2 text-[11px] font-medium text-[#6e6e77] uppercase tracking-wider">Recent</div>
-        <div id="chatHistoryList" class="flex-1 overflow-y-auto px-2 space-y-0.5">
-            <!-- Populated via JS -->
-        </div>
-
-        <!-- Bottom Settings / Pro Trigger -->
-        <div class="p-3 border-t border-[#1a1a1e] space-y-1 shrink-0">
-            <button onclick="openProModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-full hover:bg-[#151518]
+            <button onclick="createNewChat()" class="w-full inline-flex items-center justify-center gap-3 bg-[#151518
