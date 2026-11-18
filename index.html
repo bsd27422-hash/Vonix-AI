@@ -13,6 +13,10 @@
             font-family: 'Inter', sans-serif;
             background-color: #000000;
             color: #e3e3e3;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
         }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -29,13 +33,13 @@
         }
     </style>
 </head>
-<body class="bg-black text-[#e3e3e3] h-screen flex overflow-hidden selection:bg-white/20 selection:text-white">
+<body class="bg-black text-[#e3e3e3] h-screen w-screen flex overflow-hidden selection:bg-white/20 selection:text-white">
 
     <!-- Collapsible Left Sidebar -->
-    <aside id="sidebar" class="w-68 bg-[#0b0b0d] border-r border-[#1a1a1e] flex flex-col transition-all duration-300 z-30 shrink-0">
+    <aside id="sidebar" class="w-64 bg-[#0b0b0d] border-r border-[#1a1a1e] flex flex-col transition-all duration-300 z-30 shrink-0 h-full">
         <!-- Top Sidebar Controls -->
         <div class="p-3.5 flex items-center justify-between">
-            <button onclick="toggleSidebar()" class="w-10 h-10 rounded-full hover:bg-[#1a1a1e] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors" title="Collapse menu">
+            <button onclick="toggleSidebar()" class="w-10 h-10 rounded-full hover:bg-[#1a1a1e] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors cursor-pointer" title="Collapse menu">
                 <i class="fa-solid fa-bars text-sm"></i>
             </button>
         </div>
@@ -55,7 +59,7 @@
         </div>
 
         <!-- Bottom Settings / Pro Trigger -->
-        <div class="p-3 border-t border-[#1a1a1e] space-y-1">
+        <div class="p-3 border-t border-[#1a1a1e] space-y-1 shrink-0">
             <button onclick="openProModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-full hover:bg-[#151518] text-xs font-medium text-[#c4c7c5] transition-colors cursor-pointer">
                 <i class="fa-solid fa-sparkles text-white/80"></i>
                 <span>Upgrade to Vonix Pro</span>
@@ -64,17 +68,17 @@
     </aside>
 
     <!-- Main Workspace -->
-    <main class="flex-1 flex flex-col h-full bg-black relative min-w-0">
+    <main class="flex-1 flex flex-col h-full bg-black relative min-w-0 overflow-hidden">
 
         <!-- Minimal Top Bar -->
-        <header class="h-16 flex items-center justify-between px-4 md:px-6 shrink-0">
+        <header class="h-14 flex items-center justify-between px-4 md:px-6 shrink-0 border-b border-[#1a1a1e]/40">
             <div class="flex items-center gap-3">
                 <button onclick="toggleSidebar()" id="mobileMenuBtn" class="w-10 h-10 rounded-full hover:bg-[#151518] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors cursor-pointer">
                     <i class="fa-solid fa-bars text-sm"></i>
                 </button>
-                <div class="flex items-center gap-2 text-lg font-medium tracking-tight text-white px-3 py-1.5 rounded-xl">
+                <div class="flex items-center gap-2 text-base font-medium tracking-tight text-white px-3 py-1.5 rounded-xl">
                     <span>Vonix</span>
-                    <span class="text-[11px] font-normal text-[#7e7e86] bg-[#141417] border border-[#242429] px-2 py-0.5 rounded-full">2.6</span>
+                    <span class="text-[10px] font-normal text-[#7e7e86] bg-[#141417] border border-[#242429] px-2 py-0.5 rounded-full">2.6</span>
                 </div>
             </div>
 
@@ -85,14 +89,14 @@
         </header>
 
         <!-- Center Stage: Hero Welcome Screen OR Active Chat Feed -->
-        <div id="mainScrollArea" class="flex-1 overflow-y-auto px-4 flex flex-col">
+        <div id="mainScrollArea" class="flex-1 overflow-y-auto px-4 flex flex-col justify-center items-center">
             
             <!-- 1. Centered Main Screen Hero -->
-            <div id="welcomeScreen" class="my-auto w-full max-w-3xl mx-auto py-8 flex flex-col items-center text-center">
+            <div id="welcomeScreen" class="w-full max-w-2xl mx-auto py-6 flex flex-col items-center text-center">
                 
                 <!-- Vonix Crescent Logo -->
-                <div class="mb-5 relative flex flex-col items-center vonix-glow">
-                    <svg width="76" height="76" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <div class="mb-4 relative flex flex-col items-center vonix-glow">
+                    <svg width="64" height="64" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M52 14C30.5 14 14 30.8 14 51.5C14 72.2 30.8 89 51.5 89C68.5 89 82.8 77.7 87.4 62.2C81.8 72.5 70.8 79.5 58.2 79.5C39.8 79.5 25 64.7 25 46.3C25 32.1 33.9 19.9 46.4 15.1C48.2 14.4 50.1 14 52 14Z" fill="url(#crescentGrad)"/>
                         <text x="53" y="59" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="500" font-size="34" letter-spacing="-1">ai</text>
                         <defs>
@@ -103,30 +107,30 @@
                             </linearGradient>
                         </defs>
                     </svg>
-                    <span class="text-xl font-medium tracking-wide text-white -mt-1">vonix</span>
+                    <span class="text-lg font-medium tracking-wide text-white -mt-1">vonix</span>
                 </div>
 
                 <!-- Greeting Headline -->
-                <h1 class="text-3xl md:text-4xl font-medium tracking-tight mb-2">
+                <h1 class="text-2xl md:text-3xl font-medium tracking-tight mb-2">
                     <span class="silver-gradient-text">Hello, how can I help?</span>
                 </h1>
-                <p class="text-sm text-[#787880] mb-8">Ask anything, write code, or brainstorm ideas with Vonix.</p>
+                <p class="text-xs md:text-sm text-[#787880] mb-6">Ask anything, write code, or brainstorm ideas with Vonix.</p>
 
                 <!-- Quick Prompt Suggestion Chips -->
-                <div class="flex flex-wrap items-center justify-center gap-2.5 max-w-2xl">
-                    <button type="button" onclick="usePrompt('Write clean, modern code for a dark-mode landing page')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-4 py-2.5 rounded-full transition-all flex items-center gap-2 cursor-pointer">
+                <div class="flex flex-wrap items-center justify-center gap-2 max-w-xl">
+                    <button type="button" onclick="usePrompt('Write clean, modern code for a dark-mode landing page')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-3.5 py-2 rounded-full transition-all flex items-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-code text-[#8e9196]"></i>
                         <span>Write code</span>
                     </button>
-                    <button type="button" onclick="usePrompt('Give me 5 high-revenue SaaS app ideas for 2026')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-4 py-2.5 rounded-full transition-all flex items-center gap-2 cursor-pointer">
+                    <button type="button" onclick="usePrompt('Give me 5 high-revenue SaaS app ideas for 2026')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-3.5 py-2 rounded-full transition-all flex items-center gap-2 cursor-pointer">
                         <i class="fa-regular fa-lightbulb text-[#8e9196]"></i>
                         <span>Brainstorm ideas</span>
                     </button>
-                    <button type="button" onclick="usePrompt('Summarize the key takeaways of a business proposal')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-4 py-2.5 rounded-full transition-all flex items-center gap-2 cursor-pointer">
+                    <button type="button" onclick="usePrompt('Summarize the key takeaways of a business proposal')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-3.5 py-2 rounded-full transition-all flex items-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-align-left text-[#8e9196]"></i>
                         <span>Summarize text</span>
                     </button>
-                    <button type="button" onclick="usePrompt('Help me draft a professional launch announcement')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-4 py-2.5 rounded-full transition-all flex items-center gap-2 cursor-pointer">
+                    <button type="button" onclick="usePrompt('Help me draft a professional launch announcement')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-3.5 py-2 rounded-full transition-all flex items-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-pen-nib text-[#8e9196]"></i>
                         <span>Draft content</span>
                     </button>
@@ -134,46 +138,46 @@
             </div>
 
             <!-- 2. Active Conversation Stream -->
-            <div id="chatMessages" class="hidden w-full max-w-3xl mx-auto py-6 space-y-6">
+            <div id="chatMessages" class="hidden w-full max-w-2xl mx-auto py-6 space-y-4">
                 <!-- Messages injected here -->
             </div>
 
         </div>
 
         <!-- Bottom Floating Pill Input Container -->
-        <div class="w-full bg-black pt-2 pb-4 px-4 shrink-0">
-            <div class="max-w-3xl mx-auto">
-                <form id="chatForm" onsubmit="handleSendMessage(event)" class="bg-[#131316] border border-[#24242a] focus-within:border-[#3e3e48] rounded-[28px] px-4 py-3 transition-colors shadow-2xl">
+        <div class="w-full bg-black py-3 px-4 shrink-0">
+            <div class="max-w-2xl mx-auto">
+                <form id="chatForm" onsubmit="handleSendMessage(event)" class="bg-[#131316] border border-[#24242a] focus-within:border-[#3e3e48] rounded-[24px] px-4 py-2.5 transition-colors shadow-xl">
                     <textarea id="userInput" rows="1" placeholder="Ask Vonix..." 
-                        class="w-full bg-transparent text-[15px] text-white placeholder-[#787880] focus:outline-none resize-none max-h-40 leading-relaxed"
+                        class="w-full bg-transparent text-sm text-white placeholder-[#787880] focus:outline-none resize-none max-h-32 leading-relaxed"
                         oninput="autoResize(this)"
                         onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); handleSendMessage(event); }"></textarea>
                     
                     <!-- Bottom Toolbar inside Input Box -->
-                    <div class="flex items-center justify-between mt-2 pt-1">
+                    <div class="flex items-center justify-between mt-1 pt-1">
                         <div class="flex items-center gap-1">
-                            <button type="button" onclick="alert('File upload ready')" class="w-9 h-9 rounded-full hover:bg-[#202026] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors cursor-pointer" title="Add files">
-                                <i class="fa-solid fa-plus text-sm"></i>
+                            <button type="button" onclick="alert('File upload ready')" class="w-8 h-8 rounded-full hover:bg-[#202026] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors cursor-pointer" title="Add files">
+                                <i class="fa-solid fa-plus text-xs"></i>
                             </button>
-                            <button type="button" class="flex items-center gap-1.5 text-xs text-[#9ca3af] hover:text-white hover:bg-[#202026] px-3 py-1.5 rounded-full transition-colors cursor-pointer">
-                                <i class="fa-solid fa-sliders text-[11px]"></i>
+                            <button type="button" class="flex items-center gap-1.5 text-xs text-[#9ca3af] hover:text-white hover:bg-[#202026] px-2.5 py-1 rounded-full transition-colors cursor-pointer">
+                                <i class="fa-solid fa-sliders text-[10px]"></i>
                                 <span>Tools</span>
                             </button>
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <button type="button" class="w-9 h-9 rounded-full hover:bg-[#202026] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors cursor-pointer" title="Voice input">
-                                <i class="fa-solid fa-microphone text-sm"></i>
+                            <button type="button" class="w-8 h-8 rounded-full hover:bg-[#202026] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors cursor-pointer" title="Voice input">
+                                <i class="fa-solid fa-microphone text-xs"></i>
                             </button>
-                            <button type="submit" id="sendBtn" class="w-9 h-9 rounded-full bg-white text-black hover:bg-[#e2e2e6] flex items-center justify-center transition-all cursor-pointer">
+                            <button type="submit" id="sendBtn" class="w-8 h-8 rounded-full bg-white text-black hover:bg-[#e2e2e6] flex items-center justify-center transition-all cursor-pointer">
                                 <i class="fa-solid fa-arrow-up text-xs"></i>
                             </button>
                         </div>
                     </div>
                 </form>
 
-                <div class="text-center mt-2.5">
-                    <span class="text-[11px] text-[#5e5e66]">Vonix can make mistakes, so double-check it.</span>
+                <div class="text-center mt-2">
+                    <span class="text-[10px] text-[#5e5e66]">Vonix can make mistakes, so double-check it.</span>
                 </div>
             </div>
         </div>
@@ -263,20 +267,20 @@
             const isUser = sender === 'user';
 
             const row = document.createElement('div');
-            row.className = `flex gap-4 items-start ${isUser ? 'justify-end' : ''}`;
+            row.className = `flex gap-3 items-start ${isUser ? 'justify-end' : ''}`;
 
             if (isUser) {
                 row.innerHTML = `
-                    <div class="bg-[#1b1b20] text-[#f3f3f5] px-4 py-3 rounded-3xl rounded-tr-md max-w-[80%] text-[15px] leading-relaxed">
+                    <div class="bg-[#1b1b20] text-[#f3f3f5] px-4 py-2.5 rounded-2xl rounded-tr-sm max-w-[80%] text-sm leading-relaxed">
                         ${escapeHTML(text)}
                     </div>
                 `;
             } else {
                 row.innerHTML = `
-                    <div class="w-8 h-8 rounded-full bg-[#141418] border border-[#2a2a32] flex items-center justify-center shrink-0 mt-0.5">
-                        <span class="text-xs font-semibold text-white">ai</span>
+                    <div class="w-7 h-7 rounded-full bg-[#141418] border border-[#2a2a32] flex items-center justify-center shrink-0 mt-0.5">
+                        <span class="text-[10px] font-semibold text-white">ai</span>
                     </div>
-                    <div class="text-[#e3e3e3] text-[15px] leading-relaxed pt-1 max-w-[85%]">
+                    <div class="text-[#e3e3e3] text-sm leading-relaxed pt-1 max-w-[85%]">
                         ${escapeHTML(text)}
                     </div>
                 `;
@@ -303,7 +307,7 @@
             chats.forEach(chat => {
                 const item = document.createElement('div');
                 const isActive = chat.id === currentChatId;
-                item.className = `px-3 py-2 rounded-full text-xs cursor-pointer truncate transition-colors ${isActive ? 'bg-[#1b1b20] text-white font-medium' : 'text-[#9ca3af] hover:bg-[#131316] hover:text-white'}`;
+                item.className = `px-3 py-1.5 rounded-full text-xs cursor-pointer truncate transition-colors ${isActive ? 'bg-[#1b1b20] text-white font-medium' : 'text-[#9ca3af] hover:bg-[#131316] hover:text-white'}`;
                 item.textContent = chat.title;
                 item.onclick = () => loadChat(chat.id);
                 list.appendChild(item);
@@ -333,4 +337,3 @@
     </script>
 </body>
 </html>
-
