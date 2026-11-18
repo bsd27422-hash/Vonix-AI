@@ -13,10 +13,6 @@
             font-family: 'Inter', sans-serif;
             background-color: #000000;
             color: #e3e3e3;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            overflow: hidden;
         }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -33,7 +29,7 @@
         }
     </style>
 </head>
-<body class="bg-black text-[#e3e3e3] h-screen w-screen flex overflow-hidden selection:bg-white/20 selection:text-white">
+<body class="bg-black text-[#e3e3e3] min-h-screen flex flex-col md:flex-row overflow-x-hidden selection:bg-white/20 selection:text-white">
 
     <!-- Account Login / Register Modal -->
     <div id="authModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
@@ -123,7 +119,7 @@
     </div>
 
     <!-- Collapsible Left Sidebar -->
-    <aside id="sidebar" class="w-64 bg-[#0b0b0d] border-r border-[#1a1a1e] flex flex-col transition-all duration-300 z-30 shrink-0 h-full">
+    <aside id="sidebar" class="w-64 bg-[#0b0b0d] border-r border-[#1a1a1e] flex flex-col transition-all duration-300 z-30 shrink-0 h-screen fixed md:relative">
         <!-- Top Sidebar Controls -->
         <div class="p-3.5 flex items-center justify-between">
             <button onclick="toggleSidebar()" class="w-10 h-10 rounded-full hover:bg-[#1a1a1e] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors cursor-pointer" title="Collapse menu">
@@ -159,10 +155,10 @@
     </aside>
 
     <!-- Main Workspace -->
-    <main class="flex-1 flex flex-col h-full bg-black relative min-w-0 overflow-hidden">
+    <main class="flex-1 flex flex-col h-screen bg-black relative min-w-0">
 
         <!-- Minimal Top Bar -->
-        <header class="h-14 flex items-center justify-between px-4 md:px-6 shrink-0 border-b border-[#1a1a1e]/40">
+        <header class="h-14 flex items-center justify-between px-4 md:px-6 shrink-0 border-b border-[#1a1a1e]/40 bg-black z-20">
             <div class="flex items-center gap-3">
                 <button onclick="toggleSidebar()" id="mobileMenuBtn" class="w-10 h-10 rounded-full hover:bg-[#151518] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors cursor-pointer">
                     <i class="fa-solid fa-bars text-sm"></i>
@@ -232,7 +228,7 @@
         </div>
 
         <!-- Bottom Floating Pill Input Container -->
-        <div class="w-full bg-black py-3 px-4 shrink-0">
+        <div class="w-full bg-black py-3 px-4 shrink-0 z-20">
             <div class="max-w-2xl mx-auto">
                 <form id="chatForm" onsubmit="handleSendMessage(event)" class="bg-[#131316] border border-[#24242a] focus-within:border-[#3e3e48] rounded-[24px] px-4 py-2.5 transition-colors shadow-xl">
                     <textarea id="userInput" rows="1" placeholder="Ask Vonix anything..." 
@@ -334,4 +330,291 @@
                 const initial = (user.name || user.email)[0].toUpperCase();
 
                 if (activePro) {
-                    const daysLeft = Math.max(1, Math.ceil((user.proExpiresAt - Date.now()) / (1000 * 60 * 
+                    const daysLeft = Math.max(1, Math.ceil((user.proExpiresAt - Date.now()) / (1000 * 60 * 60 * 24)));
+                    sidebarPlanTag.textContent = `PRO • ${daysLeft}d left`;
+                    sidebarPlanTag.className = 'text-[10px] px-2.5 py-0.5 rounded-full bg-[#1a1f2e] border border-[#a8c7fa]/40 text-[#a8c7fa] font-medium';
+                    sidebarProBtnText.textContent = 'Vonix Pro Active';
+                    modelVersionBadge.textContent = '2.6 PRO';
+                    modelVersionBadge.className = 'text-[10px] font-medium text-[#a8c7fa] bg-[#161a24] border border-[#a8c7fa]/30 px-2 py-0.5 rounded-full';
+                } else {
+                    sidebarPlanTag.textContent = 'Free Plan';
+                    sidebarPlanTag.className = 'text-[10px] px-2.5 py-0.5 rounded-full bg-[#151518] border border-[#242429] text-[#8e9196]';
+                    sidebarProBtnText.textContent = 'Upgrade to Pro';
+                    modelVersionBadge.textContent = '2.6';
+                    modelVersionBadge.className = 'text-[10px] font-normal text-[#7e7e86] bg-[#141417] border border-[#242429] px-2 py-0.5 rounded-full';
+                }
+
+                welcomeHeadline.textContent = `Hello ${user.name.split(' ')[0]}, how can I help?`;
+
+                headerArea.innerHTML = `
+                    <div class="flex items-center gap-2 bg-[#121216] border border-[#24242a] pl-2.5 pr-1.5 py-1 rounded-full">
+                        <span class="text-xs text-[#d1d1d6] max-w-[110px] truncate">${escapeHTML(user.name)}</span>
+                        ${activePro ? '<span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#a8c7fa] text-black">PRO</span>' : ''}
+                        <div class="w-6 h-6 rounded-full bg-[#222228] flex items-center justify-center text-[11px] font-semibold text-white">${initial}</div>
+                        <button onclick="logoutUser()" title="Sign out" class="w-6 h-6 rounded-full hover:bg-[#24242c] text-[#8e9196] hover:text-white flex items-center justify-center cursor-pointer">
+                            <i class="fa-solid fa-right-from-bracket text-[10px]"></i>
+                        </button>
+                    </div>
+                `;
+            } else {
+                sidebarPlanTag.textContent = 'Guest';
+                sidebarPlanTag.className = 'text-[10px] px-2.5 py-0.5 rounded-full bg-[#151518] border border-[#242429] text-[#8e9196]';
+                sidebarProBtnText.textContent = 'Upgrade to Pro';
+                modelVersionBadge.textContent = '2.6';
+                welcomeHeadline.textContent = 'Hello, how can I help?';
+
+                headerArea.innerHTML = `
+                    <button onclick="openAuthModal('login')" class="text-xs font-medium text-[#d1d1d6] hover:text-white px-3 py-1.5 rounded-full hover:bg-[#16161a] transition cursor-pointer">
+                        Sign in
+                    </button>
+                    <button onclick="openAuthModal('register')" class="text-xs font-medium bg-white text-black hover:bg-[#e2e2e6] px-3.5 py-1.5 rounded-full transition cursor-pointer">
+                        Sign up
+                    </button>
+                `;
+            }
+        }
+
+        function openAuthModal(mode = 'login', alertMsg = '') {
+            authMode = mode;
+            switchAuthTab(mode);
+            const alertBox = document.getElementById('authAlert');
+            if (alertMsg) {
+                alertBox.textContent = alertMsg;
+                alertBox.classList.remove('hidden');
+            } else {
+                alertBox.classList.add('hidden');
+            }
+            const modal = document.getElementById('authModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('authModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            pendingProAfterAuth = false;
+        }
+
+        function switchAuthTab(mode) {
+            authMode = mode;
+            const tabLogin = document.getElementById('tabLogin');
+            const tabRegister = document.getElementById('tabRegister');
+            const nameWrapper = document.getElementById('nameFieldWrapper');
+            const authTitle = document.getElementById('authTitle');
+            const authSubmitBtn = document.getElementById('authSubmitBtn');
+
+            if (mode === 'register') {
+                tabRegister.className = 'py-1.5 text-xs font-medium rounded-lg bg-[#1d1d22] text-white transition cursor-pointer';
+                tabLogin.className = 'py-1.5 text-xs font-medium rounded-lg text-[#8e9196] hover:text-white transition cursor-pointer';
+                nameWrapper.classList.remove('hidden');
+                authTitle.textContent = 'Create Vonix Account';
+                authSubmitBtn.textContent = 'Create Account';
+            } else {
+                tabLogin.className = 'py-1.5 text-xs font-medium rounded-lg bg-[#1d1d22] text-white transition cursor-pointer';
+                tabRegister.className = 'py-1.5 text-xs font-medium rounded-lg text-[#8e9196] hover:text-white transition cursor-pointer';
+                nameWrapper.classList.add('hidden');
+                authTitle.textContent = 'Sign in to Vonix';
+                authSubmitBtn.textContent = 'Sign In';
+            }
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value.trim().toLowerCase();
+            const password = document.getElementById('authPassword').value.trim();
+            const nameInput = document.getElementById('authName').value.trim();
+            const alertBox = document.getElementById('authAlert');
+
+            const users = getUsers();
+
+            if (authMode === 'register') {
+                if (users[email]) {
+                    alertBox.textContent = 'This email is already registered. Please sign in.';
+                    alertBox.classList.remove('hidden');
+                    return;
+                }
+                const displayName = nameInput || email.split('@')[0];
+                users[email] = {
+                    name: displayName,
+                    email: email,
+                    password: password,
+                    isPro: false,
+                    proExpiresAt: null
+                };
+                saveUsers(users);
+                localStorage.setItem(SESSION_KEY, email);
+            } else {
+                const existing = users[email];
+                if (!existing || existing.password !== password) {
+                    alertBox.textContent = 'Invalid email or password. Create an account if you are new.';
+                    alertBox.classList.remove('hidden');
+                    return;
+                }
+                localStorage.setItem(SESSION_KEY, email);
+            }
+
+            checkAndCleanExpiredPro();
+            updateAccountUI();
+            const shouldOpenPro = pendingProAfterAuth;
+            closeAuthModal();
+            document.getElementById('authForm').reset();
+
+            if (shouldOpenPro) {
+                openProModal();
+            }
+        }
+
+        function logoutUser() {
+            localStorage.removeItem(SESSION_KEY);
+            updateAccountUI();
+        }
+
+        function handleProButtonClick() {
+            const user = getCurrentUser();
+            if (!user) {
+                pendingProAfterAuth = true;
+                openAuthModal('register', 'لازم تسوي حساب أو تسجل دخول أول عشان تشتري البرو وما يروح عليك.');
+                return;
+            }
+            openProModal();
+        }
+
+        function openProModal() {
+            const user = getCurrentUser();
+            if (!user) {
+                handleProButtonClick();
+                return;
+            }
+            checkAndCleanExpiredPro();
+            const freshUser = getCurrentUser();
+            const activePro = isUserPro(freshUser);
+
+            document.getElementById('proAccountLabel').textContent = `Account: ${freshUser.email}`;
+            const statusBox = document.getElementById('proStatusBox');
+            const subBtn = document.getElementById('subscribeProBtn');
+
+            if (activePro) {
+                const expDate = new Date(freshUser.proExpiresAt);
+                const formatted = expDate.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                statusBox.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> Vonix Pro is active on your account until <strong>${formatted}</strong> (1 month exact).`;
+                statusBox.classList.remove('hidden');
+                subBtn.textContent = 'Active Subscription ($10 / 15 ريال)';
+                subBtn.disabled = true;
+                subBtn.className = 'w-full bg-[#1f222b] text-[#a8c7fa] border border-[#a8c7fa]/30 text-xs font-semibold py-3 rounded-xl cursor-default';
+            } else {
+                statusBox.classList.add('hidden');
+                subBtn.textContent = 'Subscribe Now — $10 / 15 ريال';
+                subBtn.disabled = false;
+                subBtn.className = 'w-full bg-white hover:bg-[#e2e2e6] text-black text-xs font-semibold py-3 rounded-xl transition cursor-pointer';
+            }
+
+            const modal = document.getElementById('proModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeProModal() {
+            const modal = document.getElementById('proModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function activateProSubscription() {
+            const email = localStorage.getItem(SESSION_KEY);
+            if (!email) {
+                closeProModal();
+                handleProButtonClick();
+                return;
+            }
+            const users = getUsers();
+            if (!users[email]) return;
+
+            users[email].isPro = true;
+            users[email].proExpiresAt = Date.now() + THIRTY_DAYS_MS;
+            saveUsers(users);
+            updateAccountUI();
+            openProModal();
+        }
+
+        function autoResize(el) {
+            el.style.height = 'auto';
+            el.style.height = el.scrollHeight + 'px';
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+        }
+
+        function usePrompt(promptText) {
+            const input = document.getElementById('userInput');
+            input.value = promptText;
+            autoResize(input);
+            input.focus();
+        }
+
+        function createNewChat() {
+            currentChatId = 'chat_' + Date.now();
+            chats.unshift({ id: currentChatId, title: 'New chat', messages: [] });
+            saveChats();
+            renderHistory();
+            showWelcomeScreen();
+        }
+
+        function showWelcomeScreen() {
+            const welcome = document.getElementById('welcomeScreen');
+            const msgBox = document.getElementById('chatMessages');
+            const scrollArea = document.getElementById('mainScrollArea');
+            welcome.classList.remove('hidden');
+            msgBox.classList.add('hidden');
+            msgBox.innerHTML = '';
+            scrollArea.classList.add('justify-center', 'items-center');
+        }
+
+        function showChatFeed() {
+            const welcome = document.getElementById('welcomeScreen');
+            const msgBox = document.getElementById('chatMessages');
+            const scrollArea = document.getElementById('mainScrollArea');
+            welcome.classList.add('hidden');
+            msgBox.classList.remove('hidden');
+            scrollArea.classList.remove('justify-center', 'items-center');
+        }
+
+        function generateIntelligentReply(prompt) {
+            const q = prompt.trim();
+            const lower = q.toLowerCase();
+            const isArabic = /[\u0600-\u06FF]/.test(q);
+            const user = getCurrentUser();
+            const proActive = isUserPro(user);
+
+            if (/^[0-9+\-*/().\s]+$/.test(q) && /[+\-*/]/.test(q)) {
+                try {
+                    const result = Function('"use strict";return (' + q + ')')();
+                    if (typeof result === 'number' && !isNaN(result)) {
+                        return isArabic ? `الناتج هو: **${result}**` : `The answer is **${result}**.`;
+                    }
+                } catch (e) {}
+            }
+
+            if (/^(hi|hello|hey|salam|السلام|مرحبا|هلا|اهلا)/i.test(lower)) {
+                return isArabic
+                    ? `أهلاً بك في **Vonix ${proActive ? '2.6 Pro' : '2.6'}**! أنا جاهز لمساعدتك في أي سؤال، كتابة الأكواد، تلخيص النصوص، أو العصف الذهني. وش حاب نبدأ فيه اليوم؟`
+                    : `Hello! I'm **Vonix ${proActive ? '2.6 Pro' : '2.6'}**, ready to help you write code, answer questions, or brainstorm ideas. What's on your mind?`;
+            }
+
+            if (lower.includes('code') || lower.includes('html') || lower.includes('landing') || lower.includes('كود') || lower.includes('برمجة') || lower.includes('موقع')) {
+                return isArabic
+                    ? `تفضل هذا الكود النظيف والمجهز بنمط داكن احترافي:\n\n<div class="bg-zinc-950 border border-zinc-800 p-6 rounded-2xl text-white">\n  <h2 class="text-xl font-semibold">Vonix Dark Card</h2>\n  <p class="text-sm text-zinc-400 mt-2">تصميم سريع ومتجاوب مع جميع الشاشات.</p>\n</div>`
+                    : `Here is a clean, responsive dark-mode UI snippet:\n\n<div class="bg-zinc-950 border border-zinc-800 p-6 rounded-2xl text-white">\n  <h2 class="text-xl font-semibold">Vonix Dark Card</h2>\n  <p class="text-sm text-zinc-400 mt-2">Fast, minimal, and mobile-ready layout.</p>\n</div>`;
+            }
+
+            return isArabic
+                ? `فهمت سؤالك بخصوص: **"${q}"**.\n\nإليك أبرز النقاط والحل المقترح:\n1. **التحليل السريع**: التركيز على الوضوح المباشر.\n2. **الخطوة الأفضل**: البدء بتنفيذ الفكرة واختبارها خطوة بخطوة.`
+                : `Here is a structured response for **"${q}"**:\n\n1. **Key Insight**: Focusing on clarity and direct execution.\n2. **Recommended Approach**: Break the goal into clear actionable steps.`;
+        }
+
+        function handleSendMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('userInput');
+            const prompt = input.value.trim
