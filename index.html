@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vonix AI</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            color: #e3e3e3;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1e1f20; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #333537; }
+        
+        .vonix-glow {
+            filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.25));
+        }
+        .silver-gradient-text {
+            background: linear-gradient(90deg, #ffffff 0%, #a8c7fa 50%, #787982 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-black text-[#e3e3e3] h-screen flex overflow-hidden selection:bg-white/20 selection:text-white">
+
+    <!-- Collapsible Left Sidebar -->
+    <aside id="sidebar" class="w-68 bg-[#0b0b0d] border-r border-[#1a1a1e] flex flex-col transition-all duration-300 z-30 shrink-0">
+        <!-- Top Sidebar Controls -->
+        <div class="p-3.5 flex items-center justify-between">
+            <button onclick="toggleSidebar()" class="w-10 h-10 rounded-full hover:bg-[#1a1a1e] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors" title="Collapse menu">
+                <i class="fa-solid fa-bars text-sm"></i>
+            </button>
+        </div>
+
+        <!-- New Chat Pill Button -->
+        <div class="px-3 mb-4">
+            <button onclick="createNewChat()" class="inline-flex items-center gap-3 bg-[#151518] hover:bg-[#1f1f24] border border-[#242429] text-sm font-medium text-[#e3e3e3] py-2.5 px-4 rounded-full transition-all">
+                <i class="fa-solid fa-plus text-xs text-[#9ca3af]"></i>
+                <span>New chat</span>
+            </button>
+        </div>
+
+        <!-- Recent Chats List -->
+        <div class="px-4 mb-2 text-[11px] font-medium text-[#6e6e77] uppercase tracking-wider">Recent</div>
+        <div id="chatHistoryList" class="flex-1 overflow-y-auto px-2 space-y-0.5">
+            <!-- Populated via JS -->
+        </div>
+
+        <!-- Bottom Settings / Pro Trigger -->
+        <div class="p-3 border-t border-[#1a1a1e] space-y-1">
+            <button onclick="openProModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-full hover:bg-[#151518] text-xs font-medium text-[#c4c7c5] transition-colors">
+                <i class="fa-solid fa-sparkles text-white/80"></i>
+                <span>Upgrade to Vonix Pro</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 flex flex-col h-full bg-black relative min-w-0">
+
+        <!-- Minimal Top Bar -->
+        <header class="h-16 flex items-center justify-between px-4 md:px-6 shrink-0">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" id="mobileMenuBtn" class="hidden w-10 h-10 rounded-full hover:bg-[#151518] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors">
+                    <i class="fa-solid fa-bars text-sm"></i>
+                </button>
+                <button class="flex items-center gap-2 text-lg font-medium tracking-tight text-white hover:bg-[#121215] px-3 py-1.5 rounded-xl transition-colors">
+                    <span>Vonix</span>
+                    <span class="text-[11px] font-normal text-[#7e7e86] bg-[#141417] border border-[#242429] px-2 py-0.5 rounded-full">2.6</span>
+                </button>
+            </div>
+
+            <!-- User Avatar -->
+            <div class="w-8 h-8 rounded-full bg-[#18181c] border border-[#2c2c32] flex items-center justify-center text-xs font-medium text-white cursor-pointer hover:border-white/40 transition-colors">
+                V
+            </div>
+        </header>
+
+        <!-- Center Stage: Hero Welcome Screen OR Active Chat Feed -->
+        <div id="mainScrollArea" class="flex-1 overflow-y-auto px-4 flex flex-col">
+            
+            <!-- 1. Centered Main Screen Hero (Visible when chat is empty) -->
+            <div id="welcomeScreen" class="my-auto w-full max-w-3xl mx-auto py-8 flex flex-col items-center text-center">
+                
+                <!-- Vonix Crescent Logo Fallback / SVG -->
+                <div class="mb-5 relative flex flex-col items-center vonix-glow">
+                    <svg width="76" height="76" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M52 14C30.5 14 14 30.8 14 51.5C14 72.2 30.8 89 51.5 89C68.5 89 82.8 77.7 87.4 62.2C81.8 72.5 70.8 79.5 58.2 79.5C39.8 79.5 25 64.7 25 46.3C25 32.1 33.9 19.9 46.4 15.1C48.2 14.4 50.1 14 52 14Z" fill="url(#crescentGrad)"/>
+                        <text x="53" y="59" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="500" font-size="34" letter-spacing="-1">ai</text>
+                        <defs>
+                            <linearGradient id="crescentGrad" x1="14" y1="14" x2="87" y2="89" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#FFFFFF"/>
+                                <stop offset="0.5" stop-color="#C8CCD4"/>
+                                <stop offset="1" stop-color="#757882"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="text-xl font-medium tracking-wide text-white -mt-1">vonix</span>
+                </div>
+
+                <!-- Greeting Headline -->
+                <h1 class="text-3xl md:text-4xl font-medium tracking-tight mb-2">
+                    <span class="silver-gradient-text">Hello, how can I help?</span>
+                </h1>
+                <p class="text-sm text-[#787880] mb-8">Ask anything, write code, or brainstorm ideas with Vonix.</p>
+
+                <!-- Quick Prompt Suggestion Chips -->
+                <div class="flex flex-wrap items-center justify-center gap-2.5 max-w-2xl">
+                    <button onclick="usePrompt('Write clean, modern code for a dark-mode landing page')" class="
