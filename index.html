@@ -42,7 +42,7 @@
 
         <!-- New Chat Pill Button -->
         <div class="px-3 mb-4">
-            <button onclick="createNewChat()" class="w-full inline-flex items-center justify-center gap-3 bg-[#151518] hover:bg-[#1f1f24] border border-[#242429] text-sm font-medium text-[#e3e3e3] py-2.5 px-4 rounded-full transition-all">
+            <button onclick="createNewChat()" class="w-full inline-flex items-center justify-center gap-3 bg-[#151518] hover:bg-[#1f1f24] border border-[#242429] text-sm font-medium text-[#e3e3e3] py-2.5 px-4 rounded-full transition-all cursor-pointer">
                 <i class="fa-solid fa-plus text-xs text-[#9ca3af]"></i>
                 <span>New chat</span>
             </button>
@@ -56,7 +56,7 @@
 
         <!-- Bottom Settings / Pro Trigger -->
         <div class="p-3 border-t border-[#1a1a1e] space-y-1">
-            <button onclick="openProModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-full hover:bg-[#151518] text-xs font-medium text-[#c4c7c5] transition-colors">
+            <button onclick="openProModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-full hover:bg-[#151518] text-xs font-medium text-[#c4c7c5] transition-colors cursor-pointer">
                 <i class="fa-solid fa-sparkles text-white/80"></i>
                 <span>Upgrade to Vonix Pro</span>
             </button>
@@ -69,17 +69,17 @@
         <!-- Minimal Top Bar -->
         <header class="h-16 flex items-center justify-between px-4 md:px-6 shrink-0">
             <div class="flex items-center gap-3">
-                <button onclick="toggleSidebar()" id="mobileMenuBtn" class="w-10 h-10 rounded-full hover:bg-[#151518] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors">
+                <button onclick="toggleSidebar()" id="mobileMenuBtn" class="w-10 h-10 rounded-full hover:bg-[#151518] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors cursor-pointer">
                     <i class="fa-solid fa-bars text-sm"></i>
                 </button>
-                <button class="flex items-center gap-2 text-lg font-medium tracking-tight text-white hover:bg-[#121215] px-3 py-1.5 rounded-xl transition-colors">
+                <div class="flex items-center gap-2 text-lg font-medium tracking-tight text-white px-3 py-1.5 rounded-xl">
                     <span>Vonix</span>
                     <span class="text-[11px] font-normal text-[#7e7e86] bg-[#141417] border border-[#242429] px-2 py-0.5 rounded-full">2.6</span>
-                </button>
+                </div>
             </div>
 
             <!-- User Avatar -->
-            <div class="w-8 h-8 rounded-full bg-[#18181c] border border-[#2c2c32] flex items-center justify-center text-xs font-medium text-white cursor-pointer hover:border-white/40 transition-colors">
+            <div class="w-8 h-8 rounded-full bg-[#18181c] border border-[#2c2c32] flex items-center justify-center text-xs font-medium text-white">
                 V
             </div>
         </header>
@@ -87,7 +87,7 @@
         <!-- Center Stage: Hero Welcome Screen OR Active Chat Feed -->
         <div id="mainScrollArea" class="flex-1 overflow-y-auto px-4 flex flex-col">
             
-            <!-- 1. Centered Main Screen Hero (Visible when chat is empty) -->
+            <!-- 1. Centered Main Screen Hero -->
             <div id="welcomeScreen" class="my-auto w-full max-w-3xl mx-auto py-8 flex flex-col items-center text-center">
                 
                 <!-- Vonix Crescent Logo -->
@@ -114,19 +114,19 @@
 
                 <!-- Quick Prompt Suggestion Chips -->
                 <div class="flex flex-wrap items-center justify-center gap-2.5 max-w-2xl">
-                    <button onclick="usePrompt('Write clean, modern code for a dark-mode landing page')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-4 py-2.5 rounded-full transition-all flex items-center gap-2">
+                    <button type="button" onclick="usePrompt('Write clean, modern code for a dark-mode landing page')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-4 py-2.5 rounded-full transition-all flex items-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-code text-[#8e9196]"></i>
                         <span>Write code</span>
                     </button>
-                    <button onclick="usePrompt('Give me 5 high-revenue SaaS app ideas for 2026')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-4 py-2.5 rounded-full transition-all flex items-center gap-2">
+                    <button type="button" onclick="usePrompt('Give me 5 high-revenue SaaS app ideas for 2026')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-4 py-2.5 rounded-full transition-all flex items-center gap-2 cursor-pointer">
                         <i class="fa-regular fa-lightbulb text-[#8e9196]"></i>
                         <span>Brainstorm ideas</span>
                     </button>
-                    <button onclick="usePrompt('Summarize the key takeaways of a business proposal')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-4 py-2.5 rounded-full transition-all flex items-center gap-2">
+                    <button type="button" onclick="usePrompt('Summarize the key takeaways of a business proposal')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-4 py-2.5 rounded-full transition-all flex items-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-align-left text-[#8e9196]"></i>
                         <span>Summarize text</span>
                     </button>
-                    <button onclick="usePrompt('Help me draft a professional launch announcement')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-4 py-2.5 rounded-full transition-all flex items-center gap-2">
+                    <button type="button" onclick="usePrompt('Help me draft a professional launch announcement')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-4 py-2.5 rounded-full transition-all flex items-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-pen-nib text-[#8e9196]"></i>
                         <span>Draft content</span>
                     </button>
@@ -152,20 +152,20 @@
                     <!-- Bottom Toolbar inside Input Box -->
                     <div class="flex items-center justify-between mt-2 pt-1">
                         <div class="flex items-center gap-1">
-                            <button type="button" onclick="alert('File upload ready')" class="w-9 h-9 rounded-full hover:bg-[#202026] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors" title="Add files">
+                            <button type="button" onclick="alert('File upload ready')" class="w-9 h-9 rounded-full hover:bg-[#202026] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors cursor-pointer" title="Add files">
                                 <i class="fa-solid fa-plus text-sm"></i>
                             </button>
-                            <button type="button" class="flex items-center gap-1.5 text-xs text-[#9ca3af] hover:text-white hover:bg-[#202026] px-3 py-1.5 rounded-full transition-colors">
+                            <button type="button" class="flex items-center gap-1.5 text-xs text-[#9ca3af] hover:text-white hover:bg-[#202026] px-3 py-1.5 rounded-full transition-colors cursor-pointer">
                                 <i class="fa-solid fa-sliders text-[11px]"></i>
                                 <span>Tools</span>
                             </button>
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <button type="button" class="w-9 h-9 rounded-full hover:bg-[#202026] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors" title="Voice input">
+                            <button type="button" class="w-9 h-9 rounded-full hover:bg-[#202026] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors cursor-pointer" title="Voice input">
                                 <i class="fa-solid fa-microphone text-sm"></i>
                             </button>
-                            <button type="submit" id="sendBtn" class="w-9 h-9 rounded-full bg-white text-black hover:bg-[#e2e2e6] flex items-center justify-center transition-all">
+                            <button type="submit" id="sendBtn" class="w-9 h-9 rounded-full bg-white text-black hover:bg-[#e2e2e6] flex items-center justify-center transition-all cursor-pointer">
                                 <i class="fa-solid fa-arrow-up text-xs"></i>
                             </button>
                         </div>
@@ -298,6 +298,7 @@
 
         function renderHistory() {
             const list = document.getElementById('chatHistoryList');
+            if (!list) return;
             list.innerHTML = '';
             chats.forEach(chat => {
                 const item = document.createElement('div');
@@ -332,3 +333,4 @@
     </script>
 </body>
 </html>
+
