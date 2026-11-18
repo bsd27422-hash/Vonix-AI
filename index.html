@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vonix AI</title>
+    <title>Vonix AI - Powered by Gemini</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -35,6 +35,19 @@
 </head>
 <body class="bg-black text-[#e3e3e3] h-screen w-screen flex overflow-hidden selection:bg-white/20 selection:text-white">
 
+    <!-- API Key Modal -->
+    <div id="keyModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#131316] border border-[#24242a] rounded-3xl max-w-sm w-full p-6 space-y-4 text-center vonix-glow">
+            <div class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto border border-white/10">
+                <i class="fa-solid fa-key text-white text-sm"></i>
+            </div>
+            <h3 class="text-lg font-medium text-white">Connect Vonix Brain</h3>
+            <p class="text-xs text-[#9ca3af]">Paste your free Google AI Studio API key below to activate live AI responses.</p>
+            <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full bg-[#0b0b0d] border border-[#24242a] rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-white/40">
+            <button onclick="saveApiKey()" class="w-full bg-white hover:bg-[#e2e2e6] text-black text-xs font-medium py-2.5 rounded-xl transition cursor-pointer">Save Key</button>
+        </div>
+    </div>
+
     <!-- Collapsible Left Sidebar -->
     <aside id="sidebar" class="w-64 bg-[#0b0b0d] border-r border-[#1a1a1e] flex flex-col transition-all duration-300 z-30 shrink-0 h-full">
         <!-- Top Sidebar Controls -->
@@ -60,9 +73,9 @@
 
         <!-- Bottom Settings / Pro Trigger -->
         <div class="p-3 border-t border-[#1a1a1e] space-y-1 shrink-0">
-            <button onclick="openProModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-full hover:bg-[#151518] text-xs font-medium text-[#c4c7c5] transition-colors cursor-pointer">
-                <i class="fa-solid fa-sparkles text-white/80"></i>
-                <span>Upgrade to Vonix Pro</span>
+            <button onclick="toggleKeyModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-full hover:bg-[#151518] text-xs font-medium text-[#c4c7c5] transition-colors cursor-pointer">
+                <i class="fa-solid fa-key text-white/80"></i>
+                <span>API Settings</span>
             </button>
         </div>
     </aside>
@@ -130,10 +143,6 @@
                         <i class="fa-solid fa-align-left text-[#8e9196]"></i>
                         <span>Summarize text</span>
                     </button>
-                    <button type="button" onclick="usePrompt('Help me draft a professional launch announcement')" class="bg-[#111114] hover:bg-[#1a1a1f] border border-[#222228] text-xs text-[#d1d1d6] px-3.5 py-2 rounded-full transition-all flex items-center gap-2 cursor-pointer">
-                        <i class="fa-solid fa-pen-nib text-[#8e9196]"></i>
-                        <span>Draft content</span>
-                    </button>
                 </div>
             </div>
 
@@ -156,19 +165,13 @@
                     <!-- Bottom Toolbar inside Input Box -->
                     <div class="flex items-center justify-between mt-1 pt-1">
                         <div class="flex items-center gap-1">
-                            <button type="button" onclick="alert('File upload ready')" class="w-8 h-8 rounded-full hover:bg-[#202026] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors cursor-pointer" title="Add files">
-                                <i class="fa-solid fa-plus text-xs"></i>
-                            </button>
-                            <button type="button" class="flex items-center gap-1.5 text-xs text-[#9ca3af] hover:text-white hover:bg-[#202026] px-2.5 py-1 rounded-full transition-colors cursor-pointer">
-                                <i class="fa-solid fa-sliders text-[10px]"></i>
-                                <span>Tools</span>
+                            <button type="button" onclick="toggleKeyModal()" class="flex items-center gap-1.5 text-xs text-[#9ca3af] hover:text-white hover:bg-[#202026] px-2.5 py-1 rounded-full transition-colors cursor-pointer" title="API Key Setup">
+                                <i class="fa-solid fa-key text-[10px]"></i>
+                                <span>API Key</span>
                             </button>
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <button type="button" class="w-8 h-8 rounded-full hover:bg-[#202026] flex items-center justify-center text-[#9ca3af] hover:text-white transition-colors cursor-pointer" title="Voice input">
-                                <i class="fa-solid fa-microphone text-xs"></i>
-                            </button>
                             <button type="submit" id="sendBtn" class="w-8 h-8 rounded-full bg-white text-black hover:bg-[#e2e2e6] flex items-center justify-center transition-all cursor-pointer">
                                 <i class="fa-solid fa-arrow-up text-xs"></i>
                             </button>
@@ -177,7 +180,7 @@
                 </form>
 
                 <div class="text-center mt-2">
-                    <span class="text-[10px] text-[#5e5e66]">Vonix can make mistakes, so double-check it.</span>
+                    <span class="text-[10px] text-[#5e5e66]">Vonix AI can make mistakes. Verify important info.</span>
                 </div>
             </div>
         </div>
@@ -187,6 +190,30 @@
     <script>
         let chats = JSON.parse(localStorage.getItem('vonix_chats')) || [];
         let currentChatId = null;
+
+        window.onload = function() {
+            const key = localStorage.getItem('vonix_api_key');
+            if (key) {
+                document.getElementById('apiKeyInput').value = key;
+            } else {
+                toggleKeyModal();
+            }
+            renderHistory();
+        };
+
+        function toggleKeyModal() {
+            const modal = document.getElementById('keyModal');
+            modal.classList.toggle('hidden');
+            modal.classList.toggle('flex');
+        }
+
+        function saveApiKey() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            if (key) {
+                localStorage.setItem('vonix_api_key', key);
+                toggleKeyModal();
+            }
+        }
 
         function autoResize(el) {
             el.style.height = 'auto';
@@ -225,40 +252,63 @@
             document.getElementById('chatMessages').classList.remove('hidden');
         }
 
-        function handleSendMessage(e) {
+        async function handleSendMessage(e) {
             e.preventDefault();
             const input = document.getElementById('userInput');
-            const text = input.value.trim();
-            if (!text) return;
+            const prompt = input.value.trim();
+            const key = localStorage.getItem('vonix_api_key');
+
+            if (!key) {
+                toggleKeyModal();
+                return;
+            }
+            if (!prompt) return;
 
             if (!currentChatId) {
                 currentChatId = 'chat_' + Date.now();
-                chats.unshift({ id: currentChatId, title: text.slice(0, 28), messages: [] });
+                chats.unshift({ id: currentChatId, title: prompt.slice(0, 28), messages: [] });
             }
 
             const currentChat = chats.find(c => c.id === currentChatId);
             if (currentChat && currentChat.messages.length === 0) {
-                currentChat.title = text.slice(0, 28) + (text.length > 28 ? '...' : '');
+                currentChat.title = prompt.slice(0, 28) + (prompt.length > 28 ? '...' : '');
             }
 
             showChatFeed();
-            appendMessage(text, 'user');
-            if (currentChat) currentChat.messages.push({ sender: 'user', text });
+            appendMessage(prompt, 'user');
+            if (currentChat) currentChat.messages.push({ sender: 'user', text: prompt });
             
             input.value = '';
             input.style.height = 'auto';
             saveChats();
             renderHistory();
 
-            // Simulated AI Response
-            setTimeout(() => {
-                const reply = "Vonix is online and ready. Type anything or click suggestions to test the interface.";
+            // Render Loader
+            const loaderId = 'loader-' + Date.now();
+            appendLoader(loaderId);
+
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+
+                const data = await res.json();
+                removeLoader(loaderId);
+
+                if (data.error) throw new Error(data.error.message);
+
+                const reply = data.candidates[0].content.parts[0].text;
                 appendMessage(reply, 'assistant');
                 if (currentChat) {
                     currentChat.messages.push({ sender: 'assistant', text: reply });
                     saveChats();
                 }
-            }, 500);
+            } catch (err) {
+                removeLoader(loaderId);
+                appendMessage('Error: ' + err.message, 'assistant');
+            }
         }
 
         function appendMessage(text, sender) {
@@ -271,7 +321,7 @@
 
             if (isUser) {
                 row.innerHTML = `
-                    <div class="bg-[#1b1b20] text-[#f3f3f5] px-4 py-2.5 rounded-2xl rounded-tr-sm max-w-[80%] text-sm leading-relaxed">
+                    <div class="bg-[#1b1b20] text-[#f3f3f5] px-4 py-2.5 rounded-2xl rounded-tr-sm max-w-[80%] text-sm leading-relaxed whitespace-pre-wrap">
                         ${escapeHTML(text)}
                     </div>
                 `;
@@ -280,7 +330,7 @@
                     <div class="w-7 h-7 rounded-full bg-[#141418] border border-[#2a2a32] flex items-center justify-center shrink-0 mt-0.5">
                         <span class="text-[10px] font-semibold text-white">ai</span>
                     </div>
-                    <div class="text-[#e3e3e3] text-sm leading-relaxed pt-1 max-w-[85%]">
+                    <div class="text-[#e3e3e3] text-sm leading-relaxed pt-1 max-w-[85%] whitespace-pre-wrap">
                         ${escapeHTML(text)}
                     </div>
                 `;
@@ -288,6 +338,27 @@
 
             container.appendChild(row);
             scrollArea.scrollTop = scrollArea.scrollHeight;
+        }
+
+        function appendLoader(id) {
+            const container = document.getElementById('chatMessages');
+            const scrollArea = document.getElementById('mainScrollArea');
+            const row = document.createElement('div');
+            row.id = id;
+            row.className = 'flex gap-3 items-start';
+            row.innerHTML = `
+                <div class="w-7 h-7 rounded-full bg-[#141418] border border-[#2a2a32] flex items-center justify-center shrink-0 mt-0.5">
+                    <span class="text-[10px] font-semibold text-white">ai</span>
+                </div>
+                <div class="text-sm text-[#787880] animate-pulse pt-1">Vonix is thinking...</div>
+            `;
+            container.appendChild(row);
+            scrollArea.scrollTop = scrollArea.scrollHeight;
+        }
+
+        function removeLoader(id) {
+            const loader = document.getElementById(id);
+            if (loader) loader.remove();
         }
 
         function escapeHTML(str) {
@@ -327,13 +398,7 @@
             container.innerHTML = '';
             chat.messages.forEach(m => appendMessage(m.text, m.sender));
         }
-
-        function openProModal() {
-            alert('Vonix Pro subscription flow ready.');
-        }
-
-        // Initialize
-        renderHistory();
     </script>
 </body>
 </html>
+
